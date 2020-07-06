@@ -1,0 +1,23 @@
+ {
+    "name": "Code2Image",
+    "version": "1.0",
+    "description": "Select code and convert it into a pretty image with a color theme and syntax highlighting",
+    "manifest_version": 2,
+    "permissions": [
+        "contextMenus",
+        "downloads",
+        "tabs",
+        "http://*/*",
+        "https://*/*" 
+    ],
+    "icons": { 
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png" 
+    },
+    "background": {
+        "scripts": [
+            "app.js"
+        ]
+    }
+}
