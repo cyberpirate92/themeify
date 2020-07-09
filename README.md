@@ -4,12 +4,18 @@ A Google Chrome browser extension to create pretty images of code snippets power
 
 ![](./images/demo.gif)
 
-## Extension usage
-1. Select the text on the page.
+## Usage
+1. Select the text (code snippet) on the page that you want to include in the image.
 2. Right click and select Code2Image and in the submenu, select the language.
 
-![](./images/context-menu-screenshot.png)
+![](./images/context-menu1-screenshot.png)
+3. In the language submenu, select a color theme.
 
-3. A file save dialog will appear where you can rename the file if required and save the image.
-
+![](./images/context-menu2-screenshot.png)
+4. A file save dialog will appear where you can rename the file 
+if required and save the image.
 ![](./images/download-dialog-screenshot.png)
+
+## Sample Image generated using Code2Image
+
+![](./images/sample-image.png)

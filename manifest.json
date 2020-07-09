@@ -6,7 +6,7 @@
     "permissions": [
         "contextMenus",
         "downloads",
-        "tabs",
+        "activeTab",
         "http://*/*",
         "https://*/*" 
     ],
@@ -19,5 +19,8 @@
         "scripts": [
             "app.js"
         ]
+    },
+    "browser_action": {
+        "default_popup": "popup.html"
     }
 }
