@@ -1,6 +1,6 @@
  {
     "name": "Code2Image",
-    "version": "1.0",
+    "version": "2.0",
     "description": "Select code and convert it into a pretty image with a color theme and syntax highlighting",
     "manifest_version": 2,
     "permissions": [
