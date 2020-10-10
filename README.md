@@ -1,4 +1,4 @@
-# Code2Image [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)]() [![GitHub license](https://img.shields.io/github/license/cyberpirate92/code2img-chrome.svg)](https://github.com/cyberpirate92/code2img-chrome/blob/master/LICENSE)
+# Code2Image [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)]() [![GitHub license](https://img.shields.io/github/license/cyberpirate92/code2img-chrome.svg?style=for-the-badge)](https://github.com/cyberpirate92/code2img-chrome/blob/master/LICENSE) ![Chrome Web Store](https://img.shields.io/chrome-web-store/v/abloihkaeipjifnhehnicpjfjoaclngo?style=for-the-badge)
 
 A Google Chrome browser extension to create pretty images of code snippets powered by the [code2img](https://github.com/cyberpirate92/code2img) REST API.
 
