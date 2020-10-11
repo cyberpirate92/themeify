@@ -97,7 +97,6 @@ function normalize(value, minValue, maxValue) {
             backgroundImage: backgroundImageInput.value || '',
         };
         chrome.storage.sync.set(prefs, () => {
-            console.log('Preferences saved to chrome storage sync');
             saveSuccessfulAlert.classList.remove('d-none');
             window.setTimeout(() => {
                 saveSuccessfulAlert.classList.add('d-none');

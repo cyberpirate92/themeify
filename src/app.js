@@ -69,12 +69,8 @@ const defaultPreferences = {
 // Initialize default settings if running for the first time
 chrome.storage.sync.get((prefs) => {
     if (Object.keys(prefs).length == 0) {
-        chrome.storage.sync.set(defaultPreferences, () => {
-            console.log('Default preferences set');
-        });
-        chrome.storage.sync.set({defaults: JSON.stringify(defaultPreferences)}, () => {
-            console.log('Default preferences saved')
-        });
+        chrome.storage.sync.set(defaultPreferences);
+        chrome.storage.sync.set({defaults: JSON.stringify(defaultPreferences)});
     }
 });
 
@@ -161,12 +157,8 @@ function handleClick(event, tab, selectedLanguage, selectedTheme) {
         code: "window.getSelection().toString();"
     }, (selection) => {
         const selectedText = selection[0];
-        console.info('🔥', `Selected Language: ${selectedLanguage}`);
 
         chrome.storage.sync.get(( /** @type {UserPreferences} */ preferences) => {
-
-            console.log('User Preferences', preferences);
-
             let queryParams = new URLSearchParams();
             queryParams.set('language', selectedLanguage);
             queryParams.set('theme', selectedTheme);
@@ -193,15 +185,10 @@ function handleClick(event, tab, selectedLanguage, selectedTheme) {
             request.addEventListener("load", function () {
                 let durationMs = 1500;
                 if (this.status === 200) {
-                    console.info('✅', 'code2img request successful');
-                    console.info('🛠', `Response Type: ${this.responseType}`);
                     if (this.responseType === 'blob') {
-                        console.info('🛠', 'Generating Image URL');
                         const imageBlobUrl = window.URL.createObjectURL(this.response);
-                        console.info('🛠', `Image blob URL: ${imageBlobUrl}`);
 
                         let downloadFileName = `${FILENAME_PREFIX}_${getTimestamp()}.${FILE_EXTENSION}`;
-                        console.info('🛠', `Download filename: '${downloadFileName}'`);
 
                         chrome.downloads.download({
                             url: imageBlobUrl,
@@ -209,13 +196,11 @@ function handleClick(event, tab, selectedLanguage, selectedTheme) {
                             filename: downloadFileName,
                         });
                     } else {
-                        console.info('🤷‍♂️', 'Unknown response, ignored');
+                        console.error('[Themeify Extension]: ', 'Unknown response, ignored');
                     }
-                    console.info('✅', 'Operation Complete');
                     durationMs = 0;
                 } else {
                     updateOverlayText("Sorry, something went wrong 🤷‍♂️");
-                    console.warn('❌', `code2img: Request failed`);
                 }
                 setTimeout(() => {
                     clearOverlay();
