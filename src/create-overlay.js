@@ -17,7 +17,7 @@
     overlayView.style.bottom = '0px';
     overlayView.style.backgroundColor = 'rgba(0, 0, 0 ,0.5)';
     overlayView.style.zIndex = 2147483647;
-    overlayView.setAttribute('id', 'Code2Image-Loading-Overlay');
+    overlayView.setAttribute('id', 'Themeify-Loading-Overlay');
     
     /*
     font-size: 5rem;
@@ -37,7 +37,7 @@
     overlayText.style.marginTop = '30%';
     overlayText.style.textAlign = 'center';
     overlayText.textContent = "Generating Image (0%), please wait...";
-    overlayText.setAttribute('id', 'Code2Image-Loading-Overlay-Text');
+    overlayText.setAttribute('id', 'Themeify-Loading-Overlay-Text');
     
     overlayView.appendChild(overlayText);
     document.body.appendChild(overlayView);

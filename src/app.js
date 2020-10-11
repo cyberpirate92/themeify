@@ -1,8 +1,17 @@
-console.info('🔥', 'code2img v1.0');
+/**
+ * @typedef {Object} UserPreferences
+ * @property {string} backgroundColor
+ * @property {string} showBackground
+ * @property {string} backgroundImage
+ * @property {string} showLineNumbers
+ * @property {number} backgroundPadding
+ */
+
+
 const API_ENDPOINT = 'https://code2img.vercel.app';
 const FILE_EXTENSION = "png";
-const FILENAME_PREFIX = "code2img";
-const PARENT_ID = 'code2img-parent';
+const FILENAME_PREFIX = "Themeify";
+const PARENT_ID = 'themeify-parent';
 const themes = [
     "a11y-dark",
     "atom-dark",
@@ -30,6 +39,7 @@ const themes = [
     "vsc-dark-plus",
     "xonokai"
 ];
+
 const languages = [
     "c",
     "css",
@@ -43,18 +53,50 @@ const languages = [
     "typescript"
 ];
 
+/**
+ * @type {UserPreferences}
+ * Default user preferences.
+ * These can be changed by user from the extension options page (preferences.html)
+ */
+const defaultPreferences = {
+    backgroundColor: 'radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)',
+    showBackground: 'true',
+    backgroundImage: '',
+    showLineNumbers: 'false',
+    backgroundPadding: 5,
+};
+
+// Initialize default settings if running for the first time
+chrome.storage.sync.get((prefs) => {
+    if (Object.keys(prefs).length == 0) {
+        chrome.storage.sync.set(defaultPreferences, () => {
+            console.log('Default preferences set');
+        });
+        chrome.storage.sync.set({defaults: JSON.stringify(defaultPreferences)}, () => {
+            console.log('Default preferences saved')
+        });
+    }
+});
+
+/**
+ * Get timestamp in the format MMM_DD_YYYY_hhmmss
+ * 
+ * @returns {string}
+ */
 function getTimestamp() {
     const now = new Date();
     return [...now.toDateString().split(" ").splice(1), now.toTimeString().substring(0, 8).split(':').join('')].join('_');
 }
 
 /**
+ * Update overlay text created from create-overlay.js
+ * 
  * @param {string} newText 
  */
 function updateOverlayText(newText) {
     chrome.tabs.executeScript({
         code: `(() => {
-            let overlayText = document.getElementById('Code2Image-Loading-Overlay-Text');
+            let overlayText = document.getElementById('Themeify-Loading-Overlay-Text');
             if (overlayText) { 
                 overlayText.textContent = "${newText}"; 
             }
@@ -62,10 +104,13 @@ function updateOverlayText(newText) {
     });
 }
 
+/**
+ * Removes overlay
+ */
 function clearOverlay() {
     chrome.tabs.executeScript({
         code: `(() => {
-            let overlayView = document.getElementById('Code2Image-Loading-Overlay');
+            let overlayView = document.getElementById('Themeify-Loading-Overlay');
             if (overlayView) { 
                 document.body.removeChild(overlayView);
             }
@@ -73,13 +118,14 @@ function clearOverlay() {
     });
 }
 
+// create context menus for languages and themes
 chrome.contextMenus.create({
-    title: 'Code2Image',
+    title: 'Themeify',
     contexts: ['selection'],
     id: PARENT_ID
 }, () => {
     languages.forEach(language => {
-        const languageMenuItemId = `${PARENT_ID}_${language}`; 
+        const languageMenuItemId = `${PARENT_ID}_${language}`;
         chrome.contextMenus.create({
             title: language,
             parentId: PARENT_ID,
@@ -113,61 +159,70 @@ function handleClick(event, tab, selectedLanguage, selectedTheme) {
     // event.selectionText does not preserve line breaks :(
     chrome.tabs.executeScript({
         code: "window.getSelection().toString();"
-    }, (selection) => {    
+    }, (selection) => {
         const selectedText = selection[0];
         console.info('🔥', `Selected Language: ${selectedLanguage}`);
-        
-        let queryParams = new URLSearchParams();
-        queryParams.set('language', selectedLanguage);
-        queryParams.set('theme', selectedTheme);
-        queryParams.set('background-color', 'radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)');
 
-        // create overlay
-        chrome.tabs.executeScript({
-            file: 'create-overlay.js',
-        });
-        
-        let requestUrl = `${API_ENDPOINT}/api/to-image?${queryParams.toString()}`;
-        let request = new XMLHttpRequest();
-        request.responseType = 'blob';
-        request.addEventListener("progress", (progressEvent) => {
-            if (progressEvent.lengthComputable) {
-                let percentLoaded = ((progressEvent.loaded / progressEvent.total) * 100).toFixed(0);
-                updateOverlayText(`Generating Image (${percentLoaded}%), please wait`);
-            }
-        });
-        request.addEventListener("load", function () {
-            let durationMs = 1500;
-            if (this.status === 200) {
-                console.info('✅', 'code2img request successful');
-                console.info('🛠', `Response Type: ${this.responseType}`);
-                if (this.responseType === 'blob') {
-                    console.info('🛠', 'Generating Image URL');
-                    const imageBlobUrl = window.URL.createObjectURL(this.response);
-                    console.info('🛠', `Image blob URL: ${imageBlobUrl}`);
-                    
-                    let downloadFileName = `${FILENAME_PREFIX}_${getTimestamp()}.${FILE_EXTENSION}`;
-                    console.info('🛠', `Download filename: '${downloadFileName}'`);
-                    
-                    chrome.downloads.download({
-                        url: imageBlobUrl,
-                        saveAs: true,
-                        filename: downloadFileName,
-                    });
-                } else {
-                    console.info('🤷‍♂️', 'Unknown response, ignored');
+        chrome.storage.sync.get(( /** @type {UserPreferences} */ preferences) => {
+
+            console.log('User Preferences', preferences);
+
+            let queryParams = new URLSearchParams();
+            queryParams.set('language', selectedLanguage);
+            queryParams.set('theme', selectedTheme);
+            queryParams.set('background-color', preferences.backgroundColor);
+            queryParams.set('show-background', preferences.showBackground);
+            queryParams.set('line-numbers', preferences.showLineNumbers);
+            queryParams.set('background-image', preferences.backgroundImage);
+            queryParams.set('padding', preferences.backgroundPadding)
+
+            // create overlay
+            chrome.tabs.executeScript({
+                file: 'create-overlay.js',
+            });
+
+            let requestUrl = `${API_ENDPOINT}/api/to-image?${queryParams.toString()}`;
+            let request = new XMLHttpRequest();
+            request.responseType = 'blob';
+            request.addEventListener("progress", (progressEvent) => {
+                if (progressEvent.lengthComputable) {
+                    let percentLoaded = ((progressEvent.loaded / progressEvent.total) * 100).toFixed(0);
+                    updateOverlayText(`Generating Image (${percentLoaded}%), please wait`);
                 }
-                console.info('✅', 'Operation Complete');
-                durationMs = 0;
-            } else {
-                updateOverlayText("Sorry, something went wrong 🤷‍♂️");
-                console.warn('❌', `code2img: Request failed`);
-            }
-            setTimeout(() => {
-                clearOverlay();
-            }, durationMs);
+            });
+            request.addEventListener("load", function () {
+                let durationMs = 1500;
+                if (this.status === 200) {
+                    console.info('✅', 'code2img request successful');
+                    console.info('🛠', `Response Type: ${this.responseType}`);
+                    if (this.responseType === 'blob') {
+                        console.info('🛠', 'Generating Image URL');
+                        const imageBlobUrl = window.URL.createObjectURL(this.response);
+                        console.info('🛠', `Image blob URL: ${imageBlobUrl}`);
+
+                        let downloadFileName = `${FILENAME_PREFIX}_${getTimestamp()}.${FILE_EXTENSION}`;
+                        console.info('🛠', `Download filename: '${downloadFileName}'`);
+
+                        chrome.downloads.download({
+                            url: imageBlobUrl,
+                            saveAs: true,
+                            filename: downloadFileName,
+                        });
+                    } else {
+                        console.info('🤷‍♂️', 'Unknown response, ignored');
+                    }
+                    console.info('✅', 'Operation Complete');
+                    durationMs = 0;
+                } else {
+                    updateOverlayText("Sorry, something went wrong 🤷‍♂️");
+                    console.warn('❌', `code2img: Request failed`);
+                }
+                setTimeout(() => {
+                    clearOverlay();
+                }, durationMs);
+            });
+            request.open("POST", requestUrl);
+            request.send(selectedText);
         });
-        request.open("POST", requestUrl);
-        request.send(selectedText);
-    }) 
+    })
 }

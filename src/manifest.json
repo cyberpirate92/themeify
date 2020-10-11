@@ -1,12 +1,14 @@
  {
-    "name": "Code2Image",
-    "version": "2.0",
-    "description": "Select code and convert it into a pretty image with a color theme and syntax highlighting",
+    "name": "Themeify",
+    "version": "3.0",
+    "description": "Generate beautiful images of code snippets with different color themes directly from webpages",
     "manifest_version": 2,
+    "options_page": "preferences.html",
     "permissions": [
+        "activeTab",
         "contextMenus",
         "downloads",
-        "activeTab",
+        "storage",
         "http://*/*",
         "https://*/*" 
     ],
@@ -19,8 +21,5 @@
         "scripts": [
             "app.js"
         ]
-    },
-    "browser_action": {
-        "default_popup": "popup.html"
     }
 }

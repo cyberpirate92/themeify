@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Themeify preferences</title>
+    <link rel="stylesheet" href="./css/fontawesome.all.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/preferences.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class='container'>
+        <div class='row py-4 mt-4'>
+            <div class="col-12 text-center">
+                <span class="h1">Themeify Preferences</span>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card mt-4">
+                    <div class="card-header prefs-subheader text-white bg-secondary">General Preferences</div>
+                    <div class="card-body bg-light">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="showLineNumbers">
+                            <label class="form-check-label">Show Line Numbers</label>
+                        </div>
+                        <hr />
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="showBackground">
+                            <label class="form-check-label">Show Background</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-4" id="backgroundPrefsSection">
+                    <div class="card-header  prefs-subheader text-white bg-secondary">Background Preferences</div>
+                    <div class="card-body bg-light">
+                        <!-- <div class="form-group">
+                            <span class="font-weight-bold">Background Color Preview</span>
+                            <div class="color-preview" id="backgroundColorPreview"></div>
+                        </div> -->
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text" title="">
+                                        Background color
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" id="backgroundColor" placeholder="Any valid CSS background value. Example: black, #0F0, linear-gradient(90deg, #F00 0%, #00F 100%), etc">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Background Padding</div>
+                                </div>
+                                <input type="number" min="1" max="15" step="1" class="form-control" id="backgroundPadding">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        Background Image
+                                    </div>
+                                </div>
+                                <input type="text" placeholder="Image URL (Optional)" class="form-control" id="backgroundImage">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-success mt-4 d-none" id="saveSuccessfulAlert">
+                    <i class="fas fa-check-circle"></i> Your preferences are saved.
+                </div>
+                <div class="form-group text-right mt-4">
+                    <button class="btn btn-dark float-left" type="button" id="setDefaultsButton"><i class="fas fa-home"></i> Set Defaults</button>
+                    <button class="mr-2 btn btn-secondary" type="button" id="resetButton">Reset Changes <i class="fas fa-history"></i></button>
+                    <button class="btn btn-primary" type="button" id="saveButton">Save Changes <i class="fas fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./preferences.js"></script>
+</body>
+
+</html>
