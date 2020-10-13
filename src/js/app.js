@@ -170,7 +170,7 @@ function handleClick(event, tab, selectedLanguage, selectedTheme) {
 
             // create overlay
             chrome.tabs.executeScript({
-                file: 'create-overlay.js',
+                file: 'js/create-overlay.js',
             });
 
             let requestUrl = `${API_ENDPOINT}/api/to-image?${queryParams.toString()}`;
