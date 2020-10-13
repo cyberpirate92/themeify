@@ -34,12 +34,8 @@
                     </div>
                 </div>
                 <div class="card mt-4" id="backgroundPrefsSection">
-                    <div class="card-header  prefs-subheader text-white bg-secondary">Background Preferences</div>
+                    <div class="card-header prefs-subheader text-white bg-secondary">Background Preferences</div>
                     <div class="card-body bg-light">
-                        <!-- <div class="form-group">
-                            <span class="font-weight-bold">Background Color Preview</span>
-                            <div class="color-preview" id="backgroundColorPreview"></div>
-                        </div> -->
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -68,13 +64,42 @@
                                 <input type="text" placeholder="Image URL (Optional)" class="form-control" id="backgroundImage">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="text-center">
+                                <figure class="d-none">
+                                    <img class="border" alt="Background image" src="" id="backgroundImagePreview" height="200">
+                                    <figcaption>Background Image Preview</figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card w-100 mt-4 d-none" id="settingsPreviewSection">
+                    <div class="card-header bg-secondary text-white prefs-subheader">
+                        Preview
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> This is a preview of how images generated from your current settings will look like
+                        </div>
+                        <div class="text-center d-none" id="previewLoadingSpinner">
+                            <p><i class="fas fa-3x fa-spinner fa-spin text-muted"></i></p>
+                            <p class="h4 text-muted">Generating preview, please wait</p>
+                        </div>
+                        <div class="text-center">
+                            <img id="settingsPreviewImage" width="80%">
+                        </div>
+                        <div class="alert alert-danger d-none" id="previewErrorAlert">
+                            <i class="fas fa-exclamation-circle"></i> The preview failed to load, please make sure you are connected to the internet.
+                        </div>
                     </div>
                 </div>
                 <div class="alert alert-success mt-4 d-none" id="saveSuccessfulAlert">
                     <i class="fas fa-check-circle"></i> Your preferences are saved.
                 </div>
                 <div class="form-group text-right mt-4">
-                    <button class="btn btn-dark float-left" type="button" id="setDefaultsButton"><i class="fas fa-home"></i> Set Defaults</button>
+                    <button class="btn btn-info float-left" type="button" id="previewButton"><i class="fas fa-images"></i> Preview Settings</button>
+                    <button class="ml-2 btn btn-dark float-left" type="button" id="setDefaultsButton"><i class="fas fa-home"></i> Set Defaults</button>
                     <button class="mr-2 btn btn-secondary" type="button" id="resetButton">Reset Changes <i class="fas fa-history"></i></button>
                     <button class="btn btn-primary" type="button" id="saveButton">Save Changes <i class="fas fa-save"></i></button>
                 </div>
