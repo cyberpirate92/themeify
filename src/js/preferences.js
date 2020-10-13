@@ -52,7 +52,7 @@ function generatePreview(imageElement, spinnerElement, errorAlert, preferences) 
 
         let queryParams = new URLSearchParams();
         queryParams.set('language', 'java');
-        queryParams.set('theme', 'xonokai');
+        queryParams.set('theme', 'pojoaque');
         queryParams.set('background-color', preferences.backgroundColor);
         queryParams.set('show-background', preferences.showBackground);
         queryParams.set('line-numbers', preferences.showLineNumbers);
@@ -192,6 +192,8 @@ function normalize(value, minValue, maxValue) {
                     backgroundImagePreview.parentElement.classList.remove('d-none');
                 }
             }
+
+            settingsPreviewSection.classList.add('d-none');
         });
     }
     
@@ -238,6 +240,9 @@ function normalize(value, minValue, maxValue) {
 
     previewButton.addEventListener('click', () => {
         settingsPreviewSection.classList.remove('d-none');
+        settingsPreviewSection.scrollIntoView({
+            behavior: "smooth",
+        });
         generatePreview(settingsPreviewImage, previewLoadingSpinner, document.querySelector('#previewErrorAlert'), getSettings());
     });
     
@@ -251,7 +256,7 @@ function normalize(value, minValue, maxValue) {
  * used for generating the preview
  */
 const previewCode = `/*
- * 🔥🔥 Generated with Themeify 🔥🔥
+ * 🔥🔥 This is a preview 🔥🔥
  */
 import java.util.*; 
 class FizzBuzz

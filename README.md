@@ -1,10 +1,27 @@
-# Code2Image [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)]() [![GitHub license](https://img.shields.io/github/license/cyberpirate92/code2img-chrome.svg?style=for-the-badge)](https://github.com/cyberpirate92/code2img-chrome/blob/master/LICENSE) [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/abloihkaeipjifnhehnicpjfjoaclngo?style=for-the-badge)](https://chrome.google.com/webstore/detail/code2image/abloihkaeipjifnhehnicpjfjoaclngo)
+# Themeify 
 
-A Google Chrome browser extension to create pretty images of code snippets powered by the [code2img](https://github.com/cyberpirate92/code2img) REST API.
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/abloihkaeipjifnhehnicpjfjoaclngo?style=for-the-badge)](https://chrome.google.com/webstore/detail/code2image/abloihkaeipjifnhehnicpjfjoaclngo) [![GitHub license](https://img.shields.io/github/license/cyberpirate92/code2img-chrome.svg?style=for-the-badge)](https://github.com/cyberpirate92/code2img-chrome/blob/master/LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)]()
 
-[![](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_496x150.png)](https://chrome.google.com/webstore/detail/code2image/abloihkaeipjifnhehnicpjfjoaclngo)
+Themeify is a [Google Chrome extension](https://chrome.google.com/webstore/detail/code2image/abloihkaeipjifnhehnicpjfjoaclngo) for creating beautiful images of code snippets directly from webpages,  powered by the [code2img](https://github.com/cyberpirate92/code2img) REST API.
 
-![](./images/demo.gif)
+[![](./images/Store%20Assets/Marquee%20Promo%20Tile_v7.png)](https://chrome.google.com/webstore/detail/code2image/abloihkaeipjifnhehnicpjfjoaclngo)
+
+## How to use Themeify
+
+1. Select the text (code snippet) on the page.
+2. Right click on the selected text and select Themeify from the context menu and the programming language in the submenu.
+3. In the language submenu, select the color theme of your choice.
+
+![](./images/context-menu-screenshot.png)
+
+4. A file save dialog will appear where you can rename the file 
+if required and save the image.
+
+![](./images/download-dialog-screenshot.png)
+
+## Sample Image generated using Themeify
+
+![](./images/sample-output.png)
 
 ## Installing locally for Development
 
@@ -16,20 +33,3 @@ A Google Chrome browser extension to create pretty images of code snippets power
 ![](./images/load_extension.png)
 
 5. The extension is now installed locally.
-
-## Usage 
-
-1. Select the text (code snippet) on the page that you want to include in the image.
-2. Right click and select Code2Image and in the submenu, select the language.
-3. In the language submenu, select a color theme.
-
-![](./images/context-menu2-screenshot.png)
-
-4. A file save dialog will appear where you can rename the file 
-if required and save the image.
-
-![](./images/download-dialog-screenshot.png)
-
-## Sample Image generated using Code2Image extension
-
-![](./images/sample-image.png)
