@@ -6,6 +6,8 @@ Themeify is a [Google Chrome extension](https://chrome.google.com/webstore/detai
 
 [![](./images/Store%20Assets/Marquee%20Promo%20Tile_v7.png)](https://chrome.google.com/webstore/detail/code2image/abloihkaeipjifnhehnicpjfjoaclngo)
 
+---
+
 ## How to use Themeify
 
 1. Select the text (code snippet) on the page.
@@ -19,9 +21,13 @@ if required and save the image.
 
 ![](./images/download-dialog-screenshot.png)
 
+---
+
 ## Sample Image generated using Themeify
 
 ![](./images/sample-output.png)
+
+---
 
 ## Installing locally for Development
 
