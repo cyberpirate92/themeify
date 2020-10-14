@@ -1,11 +1,11 @@
 /**
- * @typedef {Object} UserPreferences
- * @property {string} backgroundColor
- * @property {string} showBackground
- * @property {string} backgroundImage
- * @property {string} showLineNumbers
- * @property {number} backgroundPadding
- */
+* @typedef {Object} UserPreferences
+* @property {string} backgroundColor
+* @property {string} showBackground
+* @property {string} backgroundImage
+* @property {string} showLineNumbers
+* @property {number} backgroundPadding
+*/
 
 
 const API_ENDPOINT = 'https://code2img.vercel.app';
@@ -54,10 +54,10 @@ const languages = [
 ];
 
 /**
- * @type {UserPreferences}
- * Default user preferences.
- * These can be changed by user from the extension options page (preferences.html)
- */
+* @type {UserPreferences}
+* Default user preferences.
+* These can be changed by user from the extension options page (preferences.html)
+*/
 const defaultPreferences = {
     backgroundColor: 'radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)',
     showBackground: 'true',
@@ -75,20 +75,20 @@ chrome.storage.sync.get((prefs) => {
 });
 
 /**
- * Get timestamp in the format MMM_DD_YYYY_hhmmss
- * 
- * @returns {string}
- */
+* Get timestamp in the format MMM_DD_YYYY_hhmmss
+* 
+* @returns {string}
+*/
 function getTimestamp() {
     const now = new Date();
     return [...now.toDateString().split(" ").splice(1), now.toTimeString().substring(0, 8).split(':').join('')].join('_');
 }
 
 /**
- * Update overlay text created from create-overlay.js
- * 
- * @param {string} newText 
- */
+* Update overlay text created from create-overlay.js
+* 
+* @param {string} newText 
+*/
 function updateOverlayText(newText) {
     chrome.tabs.executeScript({
         code: `(() => {
@@ -101,8 +101,8 @@ function updateOverlayText(newText) {
 }
 
 /**
- * Removes overlay
- */
+* Removes overlay
+*/
 function clearOverlay() {
     chrome.tabs.executeScript({
         code: `(() => {
@@ -112,6 +112,77 @@ function clearOverlay() {
             }
         })();`,
     });
+}
+
+/**
+ * Fetch image from the backend and initiate download
+ * 
+ * @param {string} codeSnippet 
+ * @param {string} language 
+ * @param {string} theme 
+ * @param {UserPreferences} preferences 
+ * @param {string} notificationId 
+ */
+function fetchImageAndDownload(codeSnippet, language, theme, preferences, notificationId) {
+    // create overlay
+    chrome.tabs.executeScript({
+        file: 'js/create-overlay.js',
+    });
+    
+    let queryParams = new URLSearchParams();
+    queryParams.set('theme', theme);
+    queryParams.set('language', language);
+    queryParams.set('padding', preferences.backgroundPadding);
+    queryParams.set('line-numbers', preferences.showLineNumbers);
+    queryParams.set('show-background', preferences.showBackground);
+    queryParams.set('background-color', preferences.backgroundColor);
+    queryParams.set('background-image', preferences.backgroundImage);
+    
+    let requestUrl = `${API_ENDPOINT}/api/to-image?${queryParams.toString()}`;
+    let request = new XMLHttpRequest();
+    request.responseType = 'blob';
+    request.addEventListener("progress", (progressEvent) => {
+        if (progressEvent.lengthComputable) {
+            let percentage = (progressEvent.loaded / progressEvent.total) * 100;
+            let percentLoaded = percentage.toFixed(0);
+            let percentRounded = Math.ceil(percentage);
+            if (notificationId) {
+                chrome.notifications.update(notificationId, {
+                    progress: percentRounded,
+                });
+            }
+            updateOverlayText(`Generating Image (${percentLoaded}%), please wait`);
+        }
+    });
+    request.addEventListener("load", function () {
+        let durationMs = 1500;
+        if (this.status === 200) {
+            if (this.responseType === 'blob') {
+                const imageBlobUrl = window.URL.createObjectURL(this.response);
+                let downloadFileName = `${FILENAME_PREFIX}_${getTimestamp()}.${FILE_EXTENSION}`;
+                
+                if (notificationId) {
+                    chrome.notifications.clear(notificationId);
+                }
+                
+                chrome.downloads.download({
+                    url: imageBlobUrl,
+                    saveAs: true,
+                    filename: downloadFileName,
+                });
+            } else {
+                console.error('[Themeify Extension]: ', 'Unknown response, ignored');
+            }
+            durationMs = 0;
+        } else {
+            updateOverlayText("Sorry, something went wrong 🤷‍♂️");
+        }
+        setTimeout(() => {
+            clearOverlay();
+        }, durationMs);
+    });
+    request.open("POST", requestUrl);
+    request.send(codeSnippet);
 }
 
 // create context menus for languages and themes
@@ -145,6 +216,7 @@ chrome.contextMenus.create({
 });
 
 /**
+* Handle color theme context menu click event
 * 
 * @param {chrome.contextMenus.OnClickData} event
 * @param {chrome.tabs.Tab} tab
@@ -157,57 +229,25 @@ function handleClick(event, tab, selectedLanguage, selectedTheme) {
         code: "window.getSelection().toString();"
     }, (selection) => {
         const selectedText = selection[0];
-
         chrome.storage.sync.get(( /** @type {UserPreferences} */ preferences) => {
-            let queryParams = new URLSearchParams();
-            queryParams.set('language', selectedLanguage);
-            queryParams.set('theme', selectedTheme);
-            queryParams.set('background-color', preferences.backgroundColor);
-            queryParams.set('show-background', preferences.showBackground);
-            queryParams.set('line-numbers', preferences.showLineNumbers);
-            queryParams.set('background-image', preferences.backgroundImage);
-            queryParams.set('padding', preferences.backgroundPadding)
-
-            // create overlay
-            chrome.tabs.executeScript({
-                file: 'js/create-overlay.js',
-            });
-
-            let requestUrl = `${API_ENDPOINT}/api/to-image?${queryParams.toString()}`;
-            let request = new XMLHttpRequest();
-            request.responseType = 'blob';
-            request.addEventListener("progress", (progressEvent) => {
-                if (progressEvent.lengthComputable) {
-                    let percentLoaded = ((progressEvent.loaded / progressEvent.total) * 100).toFixed(0);
-                    updateOverlayText(`Generating Image (${percentLoaded}%), please wait`);
-                }
-            });
-            request.addEventListener("load", function () {
-                let durationMs = 1500;
-                if (this.status === 200) {
-                    if (this.responseType === 'blob') {
-                        const imageBlobUrl = window.URL.createObjectURL(this.response);
-
-                        let downloadFileName = `${FILENAME_PREFIX}_${getTimestamp()}.${FILE_EXTENSION}`;
-
-                        chrome.downloads.download({
-                            url: imageBlobUrl,
-                            saveAs: true,
-                            filename: downloadFileName,
-                        });
-                    } else {
-                        console.error('[Themeify Extension]: ', 'Unknown response, ignored');
-                    }
-                    durationMs = 0;
+            chrome.notifications.getPermissionLevel(level => {
+                if (level === 'granted') {
+                    chrome.notifications.create(getTimestamp(), {
+                        type: 'progress',
+                        iconUrl: './icons/icon128.png',
+                        title: 'Generating Image',
+                        message: 'Image is being generating, please wait',
+                        buttons: [{
+                            title: 'Cancel',
+                        }],
+                        progress: 0,
+                    }, notificationId => {
+                        fetchImageAndDownload(selectedText, selectedLanguage, selectedTheme, preferences, notificationId);
+                    });
                 } else {
-                    updateOverlayText("Sorry, something went wrong 🤷‍♂️");
+                    fetchImageAndDownload(selectedText, selectedLanguage, selectedTheme, preferences);
                 }
-                setTimeout(() => {
-                    clearOverlay();
-                }, durationMs);
             });
-            request.open("POST", requestUrl);
-            request.send(selectedText);
         });
     })
 }

@@ -1,6 +1,6 @@
  {
     "name": "Themeify",
-    "version": "3.1",
+    "version": "3.2",
     "description": "Generate beautiful images of code snippets with different color themes directly from webpages",
     "manifest_version": 2,
     "options_page": "preferences.html",
@@ -9,6 +9,7 @@
         "contextMenus",
         "downloads",
         "storage",
+        "notifications",
         "http://*/*",
         "https://*/*" 
     ],
